@@ -1,21 +1,44 @@
+const db = require('../../data/db-config')
+
+//select returns list of all matching objects (array)..why we do first()
+//delete + update return a number of rows affected
+//insert returns an array of id's of newly inserted (could be one)
+
 const getAll = () => {
-  // DO YOUR MAGIC
+  return db('accounts')
 }
 
 const getById = id => {
-  // DO YOUR MAGIC
+  return db('accounts')
+    .where({ id })
+    .first()
 }
 
-const create = account => {
-  // DO YOUR MAGIC
+const getByName = name => {
+  return db('accounts')
+    .where({ name })
+    .first()
 }
 
-const updateById = (id, account) => {
-  // DO YOUR MAGIC
+const create = async account => {
+  const [id] = await db('accounts')
+    .insert(account)
+  return getById(id)
 }
 
-const deleteById = id => {
-  // DO YOUR MAGIC
+const updateById = async (id, account) => {
+  await db('accounts')
+    .where({ id })
+    .update(account)
+  return getById(id)
+}
+
+const deleteById = async id => {
+  let choppingBlockAccount = await getById(id)
+  await db('accounts')
+    .where({ id })
+    .del()
+  return choppingBlockAccount
 }
 
 module.exports = {
@@ -24,4 +47,5 @@ module.exports = {
   create,
   updateById,
   deleteById,
+  getByName
 }
